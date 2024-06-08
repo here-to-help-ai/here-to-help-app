@@ -166,7 +166,7 @@ export default function ClientPage() {
                     <h2 className="font-semibold">Risk Level</h2>
                     <div className="p-2" />
 
-                    {activeData.riskLevel ? <p>
+                    {activeData?.riskLevel ?    <p className="text-sm">
                         {activeData.riskLevel}
                     </p> : <NoDataMessage />
                     }
@@ -176,7 +176,7 @@ export default function ClientPage() {
                     <h2 className="font-semibold">Detected Issues</h2>
                     <div className="p-2" />
                     {/* Detected Issues */}
-                    {activeData?.detectedIssues ? <p>
+                    {activeData?.detectedIssues ?     <p className="text-sm">
                         {activeData?.detectedIssues}
                     </p> : <NoDataMessage />}
                 </section>
@@ -187,7 +187,7 @@ export default function ClientPage() {
                         <h2 className="text-lg font-semibold">Suggested Response</h2>
                         {
                             activeData?.recommendations ? (
-                                <p>
+                                <p className="text-sm">
                                     {activeData?.recommendations}
                                 </p>
                             ) : (
@@ -199,7 +199,7 @@ export default function ClientPage() {
                         <h2 className="text-lg font-semibold">Insights and Recommendations</h2>
                         {
                             activeData?.actionSteps ? (
-                                <p>
+                                <p className="text-sm">
                                     {activeData?.actionSteps}
                                 </p>
                             ) : (

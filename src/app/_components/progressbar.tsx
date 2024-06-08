@@ -29,20 +29,21 @@ export default function ProgressBar(props: ProgressBarProps) {
                            
                            return (<div key={index} className="absolute " style={{
                                 width: chunkWidth,
-                                left: chunkWidth * index
+                                left: chunkWidth * index,
+                                bottom:1
                             }}>
                                
-                                <HoverItem title={`${chunk.startTime} - ${chunk.endTime}`} content={
+                                <HoverItem title={`${chunk.startTime} - ${chunk.endTime} Seconds`} content={
 <>
-    <h2 className="text-bold">Analysis</h2>
+    <h2 className="font-bold">Analysis</h2>
     <p>{chunk.analysis}</p>
-    <h2 className="text-bold">Risk Level</h2>
+    <h2 className="font-bold">Risk Level</h2>
     <p>{chunk.riskLevel}</p>
-    <h2 className="text-bold">Detected Issues</h2>
+    <h2 className="font-bold">Detected Issues</h2>
     <p>{chunk.detectedIssues}</p>
-    <h2 className="text-bold">Recommendations</h2>
+    <h2 className="font-bold">Recommendations</h2>
     <p>{chunk.recommendations}</p>
-    <h2 className="text-bold">Action Steps</h2>
+    <h2 className="font-bold">Action Steps</h2>
     <p>{chunk.actionSteps}</p>
 </>
 
@@ -101,16 +102,16 @@ const HoverItem = (props: {
 }) => {
     const [hovered, setHovered] = useState(false);
     return (
-        <div className="h-5 w-5 bg-white border-gray-200 border flex items-center justify-center rounded-full relative" 
+        <div className="h-6 w-6 bg-white border-gray-200 border flex items-center justify-center rounded-full relative" 
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
     >
         <FaExclamation  className="text-red-500 w-4 h-4"/>
         {
             hovered && (
-                <div className="absolute top-0 left-0 bg-white p-2 rounded-lg shadow-lg w-64 h-64">
-                    <h2 className="text-lg font-bold">{props.title}</h2>
-                    <p>{props.content}</p>
+                <div className="absolute bottom-24 left-10 bg-white p-2 rounded-lg shadow-lg w-48 ">
+                    <h2 className="font-bold text-xs">{props.title}</h2>
+                    <p className="text-xs">{props.content}</p>
                 </div>
             )
         }
