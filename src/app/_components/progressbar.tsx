@@ -37,7 +37,12 @@ export default function ProgressBar(props: ProgressBarProps) {
                         ))
                     }
 
+                    <div className="h-5 w-5 bg-white  rounded-full border border-gray-300 absolute -right-2 -top-1">
+                        
+                    </div>
+                       
                 </div>
+
             </div>
             {/* Our duration */}
             <div className="p-4 bg-slate-100 rounded-r-xl flex items-center justify-between gap-2">
