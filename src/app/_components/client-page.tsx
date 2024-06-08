@@ -23,7 +23,7 @@ export default function ClientPage() {
         } | null>(null);
 
     const { data, isLoading, error } = api.ai.processTranscript.useQuery({
-        linesPerChunk: 3, //modify this to have more or less overall chunks
+        linesPerChunk: 5, //modify this to have more or less overall chunks
         transcript: transcript.transcription_speaker_timestamp
     }, {
         enabled: !!selectedInputs,
