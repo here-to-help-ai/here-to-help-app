@@ -2,35 +2,14 @@ import Groq from "groq-sdk";
 const groq = new Groq({ apiKey: "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" });
 
 
-const summarySchema = {
-    title: "Summary",
-    type: "object",
-    properties: {
-      content: { title: "Content", type: "string" },
-      difficulty: { title: "Difficulty", type: "string" },
-    },
-    required: ["content"]
-  };
 
 class Output {
-  constructor(content) {
+  content: string;
+  constructor(content: string) {
     this.content = content;
   }
 }
-export async function summarize(currentSummary: string, transcriptChunk: string): Promise<Output> {
 
-    const jsonSchema = JSON.stringify(summarySchema, null, 4);
-    const systemPrompt = `You are a summarization tool for transcripts between a customer and call centre operator. You MUST summarise the CUSTOMERS text. You will be given the current summary, and the most recent trascript. You MUST update teh summary with the new information. You MUST output summaries in JSON. \nThe JSON object must use the schema: ${jsonSchema}`;
-
-    const userPrompt = (summary: string, transcript_chunk: string) => `This is the current summary: ${summary}. This is the new transcript: ${transcript_chunk}. Create the new summary: `;
-
-    const summary = await completion(systemPrompt, userPrompt(currentSummary, transcriptChunk));
-
-    return Object.assign(
-        new Output(),
-        JSON.parse(summary.choices[0].message.content),
-    );
-}
 
 
 
@@ -45,7 +24,7 @@ export async function completion(systemPrompt: string, prompt: string): Promise<
     stream: false,
     response_format: { type: "json_object" },
   });
-  return new Output(response.choices[0].message.content);
+  return new Output(JSON.parse(response.choices[0].message.content));
 }
 
 // export async function getRecipe(recipe_name) {
