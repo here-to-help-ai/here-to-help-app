@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import InputForm from "./input-form";
 import ProgressBar from "./progressbar";
 import { FaSpinner } from "react-icons/fa";
+import { transcript } from "@/server/transcript";
 
 export type ProcessedDataArray = {
     startTime: number;
@@ -24,7 +25,7 @@ export default function ClientPage() {
 
     const { data, isLoading, error } = api.ai.processTranscript.useQuery({
         linesPerChunk: 5,
-        transcript: ""
+        transcript: transcript.transcription_speaker_timestamp
     }, {
         enabled: !!selectedInputs,
         queryKeyHashFn: (input) => JSON.stringify(input)
@@ -79,7 +80,7 @@ export default function ClientPage() {
 
     if (isLoading) {
         return (
-            <main className="h-[100vh] p-10 bg-slate-50 flex justify-center items-center">
+            <main className="h-[100vh] p-10 bg-slate-50 flex justify-center items-center gap-2">
                 <p>Initialising...</p>
                 <FaSpinner className="animate-spin" />
             </main>
@@ -94,14 +95,7 @@ export default function ClientPage() {
         );
     }
 
-    if (!activeData) {
-        return (
-            <main className="h-[100vh] p-10 bg-slate-50 flex justify-center items-center">
-                <p>Could not process data</p>
-            </main>
-        );
-    }
-
+ 
     return (
         <main className="h-[100vh] bg-slate-50 p-8 w-full flex flex-col">
             {/* Emergency Control Bar */}
@@ -131,17 +125,17 @@ export default function ClientPage() {
 
                     {/* Summary */}
                     <p>
-                        {activeData.analysis}
+                        {activeData?.analysis}
                     </p>
 
                     {/* Risk Level and Emotional State */}
                     <div>
-                        {activeData.riskLevel}
+                        {activeData?.riskLevel}
                     </div>
 
                     {/* Detected Issues */}
                     <div>
-                        {activeData.detectedIssues}
+                        {activeData?.detectedIssues}
                     </div>
                 </section>
 
@@ -154,12 +148,12 @@ export default function ClientPage() {
                     <section className="bg-white border p-4 border-grey-200 rounded-xl grow">
                         <h2 className="text-lg font-semibold">Suggested Response</h2>
 
-                        {activeData.recommendations}
+                        {activeData?.recommendations}
                     </section>
                     <section className="bg-white border p-4 border-grey-200 rounded-xl grow">
                         <h2 className="text-lg font-semibold">Insights and Recommendations</h2>
                         {
-                            activeData.actionSteps
+                            activeData?.actionSteps
                         }
                     </section>
                 </div>

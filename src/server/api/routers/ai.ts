@@ -3,11 +3,22 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { processTranscript } from '@/server/aiUtils'; 
 import { type ProcessTranscriptInput } from '@/server/types'; 
 
+
 export const aiRouter = createTRPCRouter({
   processTranscript: publicProcedure
     .input(z.object({ transcript: z.string(), linesPerChunk: z.number().min(1) }))
     .query(async ({ input }: { input: ProcessTranscriptInput }) => {
-      return processTranscript(input);
+      // const res = await axios.post(`https://api-f1db6c.stack.tryrelevance.com/latest/studios/85f65ea7-b2d0-4788-bc63-8686221de8a7/trigger_limited`, {
+      //   headers: {
+      //     Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      //     "Content-Type": "application/json"
+      //   },
+      // });
+      // const transcribed = z.string().parse(res);
+      return processTranscript({
+        linesPerChunk: input.linesPerChunk,
+        transcript: input.transcript,
+      });
     }),
 });
 
