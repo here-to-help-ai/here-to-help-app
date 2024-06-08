@@ -23,13 +23,13 @@ export type AppRouter = typeof appRouter;
 export const createCaller = createCallerFactory(appRouter);
 
 
-async function processTranscript(transcript: string) {
-  const trpc = createCaller();
-  const { lines } = await trpc.ai.chunk({ text: transcript });
+// async function processTranscript(transcript: string) {
+//   const trpc = createCaller();
+//   const { lines } = await trpc.ai.chunk({ text: transcript });
 
-  const analysisResults = await Promise.all(
-    lines.map(line => trpc.ai.analyzeLine({ line }))
-  );
+//   const analysisResults = await Promise.all(
+//     lines.map(line => trpc.ai.analyzeLine({ line }))
+//   );
 
-  return analysisResults;
-}
+//   return analysisResults;
+// }
