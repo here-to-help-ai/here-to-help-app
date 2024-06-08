@@ -2,22 +2,12 @@ import { useState } from "react";
 
 
 interface InputFormProps {
-    onSubmit: (audioFile: File
+    onSubmit: (src: string
     ) => void
 }
 
 export default function InputForm(props: InputFormProps) {
-    const [audioFile, setAudioFile] = useState<File | null>(null);
-
-    const handleAudioFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files;
-        const firstFile = files?.[0];
-        if (!firstFile) {
-            alert("No file selected");
-            return;
-        }
-        setAudioFile(firstFile);
-    }
+    const [audioSrc, setAudioSrc] = useState<string | null>(null);
 
 
     return (
@@ -25,8 +15,8 @@ export default function InputForm(props: InputFormProps) {
          className="p-8 rounded-xl bg-white border border-gray-300 flex flex-col items-center gap-4"
         onSubmit={(event) => {
             event.preventDefault();
-            if (audioFile ) {
-                props.onSubmit(audioFile);
+            if (audioSrc ) {
+                props.onSubmit(audioSrc);
             } else {
                 alert("Please select an audio file and a transcript file");
             }
@@ -41,7 +31,12 @@ export default function InputForm(props: InputFormProps) {
           
             <input 
             className="border border-gray-300 rounded-md p-2"
-            type="file" accept="audio/mpeg, audio/mp3"  onChange={handleAudioFileChange} />
+            type="file" accept="audio/mpeg, audio/mp3"  onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  setAudioSrc(URL.createObjectURL(file));
+                }
+              }} />
         
             <button
              className="bg-blue-500 text-white px-4 py-2 rounded-md"

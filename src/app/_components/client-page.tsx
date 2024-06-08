@@ -8,7 +8,7 @@ import ProgressBar from "./progressbar";
 export default function ClientPage() {
     const [selectedInputs, setSelectedInputs] = useState<
         {
-            audioFile: File;
+            src: string;
         } | null>(null);
 
 
@@ -19,8 +19,8 @@ export default function ClientPage() {
         return (
             <main className="h-[100vh] p-10 bg-slate-50 flex justify-center items-center">
                 <InputForm
-                    onSubmit={(audioFile) => {
-                        setSelectedInputs({ audioFile });
+                    onSubmit={(src) => {
+                        setSelectedInputs({ src });
                     }}
                 />
             </main>
@@ -86,7 +86,7 @@ export default function ClientPage() {
             <div className="p-4" />
 
             {/* Progress Bar */}
-            <ProgressBar chunks={[]} currentDuration={"00:10"}/>
+            <ProgressBar chunks={[]} src={selectedInputs.src}/>
         </main>
     );
 }
