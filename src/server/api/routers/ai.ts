@@ -2,12 +2,8 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 
-let post = {
-  id: 1,
-  name: "Hello World",
-};
 
-export const postRouter = createTRPCRouter({
+export const aiRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
@@ -22,11 +18,6 @@ export const postRouter = createTRPCRouter({
       // simulate a slow db call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      post = { id: post.id + 1, name: input.name };
-      return post;
     }),
 
-  getLatest: publicProcedure.query(() => {
-    return post;
-  }),
 });
