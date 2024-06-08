@@ -1,16 +1,13 @@
-import { Transcript, transcriptSchema } from "@/utils/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 interface InputFormProps {
-    onSubmit: (audioFile: File, transcript: 
-        Transcript
+    onSubmit: (audioFile: File
     ) => void
 }
 
 export default function InputForm(props: InputFormProps) {
     const [audioFile, setAudioFile] = useState<File | null>(null);
-    const [transcript, setTranscript] = useState<Transcript| null>(null);
 
     const handleAudioFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -22,50 +19,33 @@ export default function InputForm(props: InputFormProps) {
         setAudioFile(firstFile);
     }
 
-    const handleTranscriptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files;
-        const firstFile = files?.[0];
-        if (!firstFile) {
-            alert("No file selected");
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const result = event.target?.result;
-            if (typeof result !== "string") {
-                alert("Transcript file is not a string");
-                return;
-            }
-            try {
-                const transcript = JSON.parse(result);
-                transcriptSchema.parse(transcript);
-                setTranscript(transcript);
-            } catch (error) {
-                console.error(error);
-                alert("Transcript file is not valid JSON");
-            }
-        }
-        reader.readAsText(firstFile);
-    }
 
     return (
-        <form onSubmit={(event) => {
+        <form 
+         className="p-8 rounded-xl bg-white border border-gray-300 flex flex-col items-center gap-4"
+        onSubmit={(event) => {
             event.preventDefault();
-            if (audioFile && transcript) {
-                props.onSubmit(audioFile, transcript);
+            if (audioFile ) {
+                props.onSubmit(audioFile);
             } else {
                 alert("Please select an audio file and a transcript file");
             }
         }}>
-            <label>
-                Audio File
-                <input type="file" accept="audio/mpeg, audio/mp3"  onChange={handleAudioFileChange} />
-            </label>
-            <label>
-                Transcript
-                <input type="file" accept="application/json" onChange={handleTranscriptChange} />
-            </label>
-            <button type="submit">Submit</button>
+            <h1 className="text-center text-3xl font-semibold">
+                Here-to-Help.ai
+            </h1>
+
+            <h2>
+                Select get started with an audio file
+            </h2>
+          
+            <input 
+            className="border border-gray-300 rounded-md p-2"
+            type="file" accept="audio/mpeg, audio/mp3"  onChange={handleAudioFileChange} />
+        
+            <button
+             className="bg-blue-500 text-white px-4 py-2 rounded-md"
+             type="submit">Get Started</button>
         </form>
     )
 
