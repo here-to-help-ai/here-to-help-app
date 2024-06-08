@@ -22,7 +22,7 @@ To address this, we present our AI-powered app, specifically designed to **augme
    - Our app transcribes conversations in real-time, allowing crisis workers to focus entirely on the caller without the distraction of note-taking. This real-time transcription is immediately available for review, providing instant context and clarity.
 
 2. **Contextual Suggestions and Insights:**
-   - Utilising Assembly.ai's powerful speech-to-text LLM, our app analyses the ongoing conversation and offers real-time suggestions, reminders, and action plans tailored to the caller’s specific needs. This dynamic support ensures that critical cues are not missed and that the crisis worker can respond with the most appropriate and effective interventions.
+   - Utilising a powerful speech-to-text LLM, our app analyses the ongoing conversation and offers real-time suggestions, reminders, and action plans tailored to the caller’s specific needs. This dynamic support ensures that critical cues are not missed and that the crisis worker can respond with the most appropriate and effective interventions.
 
 3. **Emotional and Cognitive Support for Workers:**
    - By reducing the cognitive load on crisis workers, our app helps mitigate the emotional toll they experience. It provides them with a safety net of insights and suggestions, allowing them to perform their role with greater confidence and less stress.
@@ -37,7 +37,7 @@ Our app is built to ensure robust performance and scalability:
 - **TypeScript** for reliable and maintainable code.
 - **Tailwind CSS** for a modern and adaptive design.
 - **Groq** for efficient data querying and processing.
-- **Assembly.ai** for advanced speech-to-text capabilities and real-time transcription accuracy.
+- **Relevance.ai** for advanced speech-to-text capabilities and real-time transcription accuracy.
 
 ---
 
@@ -55,7 +55,7 @@ Our app embodies the theme of "AI for a better world" by addressing one of the m
 
 Thank you for considering our solution. 
 
-Created by: Jeffery Tan, Jordan Moshcovitis, Rakshitsh Ramprakash, Sahil Kumar. 
+Created by: Jeffery Tan, Jordan Moshcovitis, Rakshith Ramprakash, Sahil Kumar. 
 
 Date: 08 June 2024
 
