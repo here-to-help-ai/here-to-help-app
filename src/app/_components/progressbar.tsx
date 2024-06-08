@@ -1,4 +1,4 @@
-import { ReactNode, useRef, useState } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import AudioPlayer from "./audio-player";
 import { FaPlay } from "react-icons/fa";
 interface Chunk {

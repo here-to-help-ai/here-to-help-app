@@ -6,15 +6,10 @@ import { ProcessTranscriptInput } from '@/server/types';
 export const aiRouter = createTRPCRouter({
   processTranscript: publicProcedure
     .input(z.object({ transcript: z.string(), linesPerChunk: z.number().min(1) }))
-    .mutation(async ({ input }: { input: ProcessTranscriptInput }) => {
+    .query(async ({ input }: { input: ProcessTranscriptInput }) => {
       return processTranscript(input);
     }),
 });
-
-
-
-
-
 
 
 

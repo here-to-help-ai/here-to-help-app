@@ -4,6 +4,7 @@ import { api } from "@/trpc/react";
 import { useState } from "react";
 import InputForm from "./input-form";
 import ProgressBar from "./progressbar";
+import { FaSpinner } from "react-icons/fa";
 
 export default function ClientPage() {
     const [selectedInputs, setSelectedInputs] = useState<
@@ -12,8 +13,14 @@ export default function ClientPage() {
         } | null>(null);
 
 
-    const chunk = api.ai.chunk.useMutation();
-    const analysis = api.ai.chunk.useMutation();
+    const {data, isLoading, error} = api.ai.processTranscript.useQuery({
+        linesPerChunk: 5,
+        transcript: ""
+    }, {
+        enabled: !!selectedInputs,
+        queryKeyHashFn: (input) => JSON.stringify(input)
+    })
+
 
     if (!selectedInputs) {
         return (
@@ -23,6 +30,23 @@ export default function ClientPage() {
                         setSelectedInputs({ src });
                     }}
                 />
+            </main>
+        );
+    }
+
+    if (isLoading) {
+        return (
+            <main className="h-[100vh] p-10 bg-slate-50 flex justify-center items-center">
+                <p>Initialising...</p>
+                <FaSpinner className="animate-spin" />
+            </main>
+        );
+    }
+
+    if (error) {
+        return (
+            <main className="h-[100vh] p-10 bg-slate-50 flex justify-center items-center">
+                <p>Error: {error.message}</p>
             </main>
         );
     }
