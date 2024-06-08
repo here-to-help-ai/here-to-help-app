@@ -55,7 +55,7 @@ export default function ClientPage() {
         <main className="h-[100vh] bg-slate-50 p-8 w-full flex flex-col">
             {/* Emergency Control Bar */}
             <section className="flex justify-end">
-                <button className="bg-red-600 text-white px-16 py-1 font-bold rounded-lg">
+                <button className="bg-red-600 text-white px-16 py-1.5 font-bold rounded-lg">
                     Call 000
                 </button>
             </section>
