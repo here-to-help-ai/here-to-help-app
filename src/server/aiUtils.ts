@@ -35,11 +35,11 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
     for (let i = 0; i < lines.length; i += linesPerChunk) {
       chunks.push(lines.slice(i, i + linesPerChunk).join('\n'));
     }
-  
+    // console.log(chunks);
     let results: Results = {};
     let conversationBuffer = "";
     let summaryResult = "";
-  
+    
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
       const summaryResult = await summarize(chunk);
@@ -65,7 +65,12 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
       };
     }
   
+    // console.log(results);
     return results;
   };
 
 await processTranscript({ transcript, linesPerChunk: 2 });
+
+
+
+//  use zod scehema and json parse to retry 
