@@ -57,10 +57,18 @@ export default function ClientPage() {
     }, [data])
 
     const activeData = useMemo(() => {
-        return processedData.find((d) => {
+      
+        const active =  processedData.find((d) => {
             return d.startTime <= currentDuration && d.endTime >= currentDuration;
         }
         );
+        // if nothing just fall back to the one where the endtime is closest to the current duration
+        if (!active) {
+            return processedData.reduce((prev, curr) => {
+                return Math.abs(curr.endTime - currentDuration) < Math.abs(prev.endTime - currentDuration) ? curr : prev;
+            }, []);
+        }
+        return active;
     }
         , [processedData, currentDuration])
 
