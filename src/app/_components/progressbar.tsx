@@ -1,6 +1,6 @@
 import { type ReactNode, useRef, useState } from "react";
 import AudioPlayer from "./audio-player";
-import { FaPlay } from "react-icons/fa";
+import { FaExclamation, FaPlay } from "react-icons/fa";
 import { ProcessedDataArray } from "./client-page";
 
 
@@ -26,25 +26,27 @@ export default function ProgressBar(props: ProgressBarProps) {
 
                     {
                         data.map((chunk, index) => {
-                            // eslint-disable-next-line react-hooks/rules-of-hooks
-                            const [hovered, setHovered] = useState(false);
+                           
                            return (<div key={index} className="absolute " style={{
                                 width: chunkWidth,
                                 left: chunkWidth * index
                             }}>
-                                <div className="h-2.5 w-2.5 bg-red-500 rounded-full relative" 
-                                    onMouseEnter={() => setHovered(true)}
-                                    onMouseLeave={() => setHovered(false)}
-                                >
-                                    {
-                                        hovered && (
-                                            <div className="absolute top-0 left-0 bg-white p-2 rounded-lg shadow-lg">
-                                                {/* {chunk} */}
-                                            </div>
-                                        )
-                                    }
-                                  
-                                </div>
+                               
+                                <HoverItem title={`${chunk.startTime} - ${chunk.endTime}`} content={
+<>
+    <h2 className="text-bold">Analysis</h2>
+    <p>{chunk.analysis}</p>
+    <h2 className="text-bold">Risk Level</h2>
+    <p>{chunk.riskLevel}</p>
+    <h2 className="text-bold">Detected Issues</h2>
+    <p>{chunk.detectedIssues}</p>
+    <h2 className="text-bold">Recommendations</h2>
+    <p>{chunk.recommendations}</p>
+    <h2 className="text-bold">Action Steps</h2>
+    <p>{chunk.actionSteps}</p>
+</>
+
+                                } />
                             </div>)
 })
                     }
@@ -88,5 +90,31 @@ export default function ProgressBar(props: ProgressBarProps) {
             }}
             />
         </div>
+    )
+
+
+}
+
+const HoverItem = (props: {
+    title: string;
+    content: ReactNode;
+}) => {
+    const [hovered, setHovered] = useState(false);
+    return (
+        <div className="h-5 w-5 bg-white border-gray-200 border flex items-center justify-center rounded-full relative" 
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+    >
+        <FaExclamation  className="text-red-500 w-4 h-4"/>
+        {
+            hovered && (
+                <div className="absolute top-0 left-0 bg-white p-2 rounded-lg shadow-lg w-64 h-64">
+                    <h2 className="text-lg font-bold">{props.title}</h2>
+                    <p>{props.content}</p>
+                </div>
+            )
+        }
+      
+    </div>
     )
 }

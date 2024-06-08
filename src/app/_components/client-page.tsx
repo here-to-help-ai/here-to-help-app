@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import InputForm from "./input-form";
 import ProgressBar from "./progressbar";
 import { FaSpinner } from "react-icons/fa";
@@ -22,10 +22,8 @@ export default function ClientPage() {
             src: string;
         } | null>(null);
 
-
-        
     const { data, isLoading, error } = api.ai.processTranscript.useQuery({
-        linesPerChunk: 10, //modify this to have more or less overall chunks
+        linesPerChunk: 5, //modify this to have more or less overall chunks
         transcript: transcript.transcription_speaker_timestamp
     }, {
         enabled: !!selectedInputs,
@@ -59,27 +57,51 @@ export default function ClientPage() {
             });
         }
 
+        console.log("Raw Data", res);
+        console.log("Current Duration", currentDuration);
+
         // filter so that endtime is less than the current duration
-       res =  res.filter((d) => d.endTime <= currentDuration);
-        
+        const before = res.filter((d) => {
+            return d.endTime <= currentDuration;
+        });
+
+
+        if (before.length === 0) {
+            // array with element with the lowest end time
+            res = [res.reduce((prev, current) => {
+                return (prev.endTime < current.endTime) ? prev : current;
+            })];  
+        }
+        else {
+            res = before;
+        }
+
+        console.log("Filtered Data", res);
+
         return res;
-    }, [data])
+    }, [data, currentDuration])
+
+    useEffect(() => {
+        console.log("Processed Data", processedData);
+    }, [processedData])
 
     const activeData = useMemo(() => {
-      
-        const active =  processedData.find((d) => {
-            return d.startTime <= currentDuration && d.endTime >= currentDuration;
+
+        // get last element of processed data
+        const lastElement = processedData[processedData.length - 1];
+
+        if (!lastElement) {
+            return null;
         }
-        );
-        // if nothing just fall back to the one where the endtime is closest to the current duration
-        if (!active) {
-            return processedData.reduce((prev, curr) => {
-                return Math.abs(curr.endTime - currentDuration) < Math.abs(prev.endTime - currentDuration) ? curr : prev;
-            }, []);
-        }
-        return active;
+
+        return lastElement;
     }
-        , [processedData, currentDuration])
+        , [processedData,])
+
+    useEffect(() => {
+        console.log("Active Data", activeData);
+    }
+        , [activeData])
 
 
 
@@ -112,7 +134,7 @@ export default function ClientPage() {
         );
     }
 
- 
+
     return (
         <main className="h-[100vh] bg-slate-50 p-8 w-full flex flex-col">
             {/* Emergency Control Bar */}
@@ -139,31 +161,20 @@ export default function ClientPage() {
                 {/* Profile */}
                 <section className="bg-white border p-4 border-grey-200 rounded-xl">
                     <h2 className="text-lg font-semibold">Your call with Sahil</h2>
-                    <div className="p-2"/>
-                    {/* Summary */}
-
-                    {
-                        activeData?.analysis ? <p>
-                            {activeData?.analysis}
-                        </p> : <NoDataMessage />
-                    }
-                   
-
-
-                    <div className="p-4"/>
+                    <div className="p-2" />
                     {/* Risk Level and Emotional State */}
                     <h2 className="font-semibold">Risk Level</h2>
-                    <div className="p-2"/>
-                
+                    <div className="p-2" />
+
                     {activeData.riskLevel ? <p>
                         {activeData.riskLevel}
                     </p> : <NoDataMessage />
                     }
 
-               
+                    <div className="p-4" />
 
                     <h2 className="font-semibold">Detected Issues</h2>
-                    <div className="p-2"/>
+                    <div className="p-2" />
                     {/* Detected Issues */}
                     {activeData?.detectedIssues ? <p>
                         {activeData?.detectedIssues}
