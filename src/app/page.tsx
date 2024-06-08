@@ -1,13 +1,9 @@
-"use client"
-import { api } from "@/trpc/react";
-
+import ClientPage from "./_components/client-page";
 export default async function Home() {
-  const chunk = api.ai.chunk.useMutation();
-  const analysis = api.ai.chunk.useMutation();
-
+ 
   return (
-    <main className="">
-     
+    <main className="h-[100vh] bg-slate-50">
+      <ClientPage/>
     </main>
   );
 }
