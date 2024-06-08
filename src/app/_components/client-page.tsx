@@ -160,7 +160,7 @@ export default function ClientPage() {
             >
                 {/* Profile */}
                 <section className="bg-white border p-4 border-grey-200 rounded-xl">
-                    <h2 className="text-lg font-semibold">Your call with Sahil</h2>
+                    <h2 className="text-lg font-semibold">Your call with Jonathan</h2>
                     <div className="p-2" />
                     {/* Risk Level and Emotional State */}
                     <h2 className="font-semibold">Risk Level</h2>
