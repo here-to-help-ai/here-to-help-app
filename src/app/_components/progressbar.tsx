@@ -28,7 +28,7 @@ export default function ProgressBar(props: ProgressBarProps) {
 
                     {
                         chunks.map((chunk, index) => (
-                            <div className="absolute" style={{
+                            <div key={index} className="absolute" style={{
                                 width: chunkWidth,
                                 left: chunkWidth * index
                             }}>

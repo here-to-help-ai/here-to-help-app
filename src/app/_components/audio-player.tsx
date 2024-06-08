@@ -33,7 +33,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, isPlaying, onTimeUpdate 
     const audioElement = audioRef.current;
     if (audioElement) {
       if (isPlaying) {
-        audioElement.play();
+        void audioElement.play();
       } else {
         audioElement.pause();
       }
