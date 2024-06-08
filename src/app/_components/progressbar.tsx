@@ -1,22 +1,20 @@
 import { type ReactNode, useRef, useState } from "react";
 import AudioPlayer from "./audio-player";
 import { FaPlay } from "react-icons/fa";
-interface Chunk {
-    startTime: Date;
-    endTime: Date;
-    popups: ReactNode[];
-}
+import { ProcessedDataArray } from "./client-page";
+
 
 interface ProgressBarProps {
-    chunks: Chunk[];
+    data: ProcessedDataArray;
     src: string;
+    currentDuration: number;
+    setCurrentDuration: (duration: number) => void;
 }
 
 export default function ProgressBar(props: ProgressBarProps) {
-    const { chunks, src } = props;
+    const { data, src, currentDuration, setCurrentDuration } = props;
     const ref = useRef<HTMLDivElement>(null);
-    const chunkWidth = ref.current?.clientWidth ? ref.current.clientWidth / chunks.length : 0;
-    const [currentDuration, setCurrentDuration] = useState<number>(0);
+    const chunkWidth = ref.current?.clientWidth ? ref.current.clientWidth / data.length : 0;
     const [isPlaying, setIsPlaying] = useState(false);
 
     return (
@@ -27,7 +25,7 @@ export default function ProgressBar(props: ProgressBarProps) {
                     ref={ref}>
 
                     {
-                        chunks.map((chunk, index) => (
+                        data.map((chunk, index) => (
                             <div key={index} className="absolute" style={{
                                 width: chunkWidth,
                                 left: chunkWidth * index
@@ -72,9 +70,6 @@ export default function ProgressBar(props: ProgressBarProps) {
 
             <AudioPlayer src={src} isPlaying={isPlaying} 
             onTimeUpdate={(currentTime) => {
-                
-       
-
                 setCurrentDuration(currentTime);
             }}
             />

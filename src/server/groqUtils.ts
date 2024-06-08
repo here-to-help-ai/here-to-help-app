@@ -19,7 +19,12 @@ export async function completion(systemPrompt: string, prompt: string): Promise<
     stream: false,
     response_format: { type: "json_object" },
   });
-  return new Output(JSON.parse(response.choices[0].message.content));
+
+  const content = response.choices[0]?.message.content;
+  if (!content) throw new Error("No content in response");
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  return new Output(JSON.parse(content));
 }
 
 // export async function getRecipe(recipe_name) {
