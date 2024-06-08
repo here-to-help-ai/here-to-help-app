@@ -1,5 +1,10 @@
 import Groq from "groq-sdk";
 import { z } from 'zod';
+import OpenAI from "openai";
+const openai = new OpenAI({
+  apiKey: "sk-proj-L0GoDXdVMbcDBqaXkG8kT3BlbkFJDMLnZJm5KJWxn3HjdV1x",
+});
+
 
 const groq = new Groq({ apiKey: "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" });
 
@@ -18,26 +23,53 @@ const OutputSchema = z.object({
 
 
 export async function completion(systemPrompt: string, prompt: string): Promise<Output> {
-  // async function fetchCompletion(): Promise<Output> {
-    const response = await groq.chat.completions.create({
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: prompt },
-      ],
-      // model: "llama3-8b-8192",
-      // model: "llama3-70b-8192",
-      model: "mixtral-8x7b-32768",
-      max_tokens: 16000,
-      temperature: 0.8,
-      stream: false,
-      response_format: { type: "json_object" },
-    });
-    const content = response.choices[0]?.message.content;
-    if (!content) throw new Error("No content in response");
-  
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    return new Output(JSON.parse(content));
+  const response = await openai.chat.completions.create({
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: prompt },
+    ],
+    // model: "llama3-8b-8192",
+    // model: "llama3-70b-8192",
+    model: "gpt-4o",
+    max_tokens: 1000,
+    temperature: 0.01,
+    response_format: { type: "json_object" },
+  });
+  const content = response.choices[0]?.message.content;
+  if (!content) throw new Error("No content in response");
+
+  let parsedContent;
+  try {
+    parsedContent = JSON.parse(content);
+  } catch (error) {
+    throw new Error("Failed to parse JSON content");
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  return new Output(parsedContent);
+}
+
+// export async function completion(systemPrompt: string, prompt: string): Promise<Output> {
+//   // async function fetchCompletion(): Promise<Output> {
+//     const response = await groq.chat.completions.create({
+//       messages: [
+//         { role: "system", content: systemPrompt },
+//         { role: "user", content: prompt },
+//       ],
+//       // model: "llama3-8b-8192",
+//       // model: "llama3-70b-8192",
+//       model: "mixtral-8x7b-32768",
+//       max_tokens: 16000,
+//       temperature: 0.8,
+//       stream: false,
+//       response_format: { type: "json_object" },
+//     });
+//     const content = response.choices[0]?.message.content;
+//     if (!content) throw new Error("No content in response");
+  
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+//     return new Output(JSON.parse(content));
+//   }
 
 //     try {
 //       // Validate the response using the Zod schema
