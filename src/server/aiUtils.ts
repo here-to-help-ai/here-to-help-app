@@ -60,12 +60,12 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
       // ok from the chunk there will be multiple occurrences of the following pattern
       //  Time-stamp: 1.12 - 6.18
       // we wannt to extract all the numbers, then get the min and max
-
+  
       const timeStamps = chunk.match(/Time-stamp: (\d+\.\d+) - (\d+\.\d+)/g);
       const startTime = Number(timeStamps[0].match(/Time-stamp: (\d+\.\d+) - (\d+\.\d+)/)[1]);
       const endTime = Number(timeStamps[timeStamps.length - 1].match(/Time-stamp: (\d+\.\d+) - (\d+\.\d+)/)[2]);
   
-      results[`chunk_${i + 1}`] = {
+      results[`${startTime}_${endTime}`] = {
         summary: accumulatedSummary,
         // analysis: analysisResult,
         // riskLevel: riskLevelResult,

@@ -53,6 +53,10 @@ export default function ClientPage() {
                 actionSteps: value.actionSteps.steps
             });
         }
+
+        // filter so that endtime is less than the current duration
+        res.filter((d) => d.endTime <= currentDuration);
+        
         return res;
     }, [data])
 
