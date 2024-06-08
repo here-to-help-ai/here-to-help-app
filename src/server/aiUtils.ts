@@ -1,5 +1,5 @@
 import { summarize, emotionalState, riskLevel, detectedIssues, recommendations, actionSteps } from './aiHelpers'; // Adjust the import path as necessary
-import { Results, ProcessTranscriptInput } from '@/server/types'; // Adjust the import path for types
+import { type Results, type ProcessTranscriptInput } from '@/server/types'; // Adjust the import path for types
 
 const transcript = `
 Operator: It's important to remember that your feelings and experiences are valid, and it's okay to seek support from those around you. Sometimes just sharing can make a big difference. Have you considered talking to a mental health professional, like a therapist or counselor?
