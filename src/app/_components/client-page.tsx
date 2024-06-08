@@ -2,13 +2,13 @@
 
 import { api } from "@/trpc/react";
 import { useState } from "react";
-import { Transcript } from "@/utils/types";
 import InputForm from "./input-form";
+import ProgressBar from "./progressbar";
 
 export default function ClientPage() {
     const [selectedInputs, setSelectedInputs] = useState<
         {
-            audioFile: File;
+            src: string;
         } | null>(null);
 
 
@@ -19,8 +19,8 @@ export default function ClientPage() {
         return (
             <main className="h-[100vh] p-10 bg-slate-50 flex justify-center items-center">
                 <InputForm
-                    onSubmit={(audioFile) => {
-                        setSelectedInputs({ audioFile });
+                    onSubmit={(src) => {
+                        setSelectedInputs({ src });
                     }}
                 />
             </main>
@@ -46,7 +46,7 @@ export default function ClientPage() {
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1.3fr] gap-4 grow">
                 {/* Profile */}
                 <section className="bg-white border p-4 border-grey-200 rounded-xl">
-                    <h2 className="text-lg font-semibold">Your call with Jeff Tan</h2>
+                    <h2 className="text-lg font-semibold">Your call with Sahil</h2>
 
                     {/* Summary */}
                     <p>
@@ -86,9 +86,7 @@ export default function ClientPage() {
             <div className="p-4" />
 
             {/* Progress Bar */}
-            <section className="bg-white border p-4 border-grey-200 rounded-xl">
-
-            </section>
+            <ProgressBar chunks={[]} src={selectedInputs.src}/>
         </main>
     );
 }
