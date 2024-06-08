@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { processTranscript } from '@/server/aiUtils'; 
-import { ProcessTranscriptInput } from '@/server/types'; 
+import { type ProcessTranscriptInput } from '@/server/types'; 
 
 export const aiRouter = createTRPCRouter({
   processTranscript: publicProcedure

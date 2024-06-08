@@ -1,17 +1,12 @@
 import Groq from "groq-sdk";
 const groq = new Groq({ apiKey: "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" });
 
-
-
 class Output {
   content: string;
   constructor(content: string) {
     this.content = content;
   }
 }
-
-
-
 
 export async function completion(systemPrompt: string, prompt: string): Promise<Output> {
   const response = await groq.chat.completions.create({

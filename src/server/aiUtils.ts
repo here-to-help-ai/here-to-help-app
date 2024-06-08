@@ -11,22 +11,6 @@ Customer: Thank you. That sounds like a good place to start. I appreciate you li
 Operator: Of course. I'm here to support you, and there's absolutely no judgment. You're doing the right thing by seeking help. Let's work together to find the best path forward for you.
 `;
 
-// interface ResultDetails {
-//     analysis: { state: string };
-//     riskLevel: { level: string };
-//     detectedIssues: { issues: string };
-//     recommendations: { recommendation: string };
-//     actionSteps: { steps: string };
-//   }
-
-//   type Results = Record<string, ResultDetails>;
-
-interface TranscriptInput {
-    transcript: string;
-    linesPerChunk: number;
-  }
-
-
 const BUFFER_SIZE = 2;
 export const processTranscript = async (input: ProcessTranscriptInput): Promise<Results> => {
     const { transcript, linesPerChunk } = input;
