@@ -20,22 +20,30 @@ const summarySchema = {
 export async function summarize(currentSummary: string, transcriptChunk: string): Promise<Output> {
 
   const jsonSchema = JSON.stringify(summarySchema, null, 4);
-  const systemPrompt = `You are a summarization tool for transcripts between a customer and call centre operator. You MUST summarise the CUSTOMERS text. You will be given the current summary, and the most recent trascript. You MUST update teh summary with the new information. You MUST output summaries in JSON. \nThe JSON object must use the schema: ${jsonSchema}`;
+  const systemPrompt = `You are an expert and genius summarization tool for transcripts between a customer and call centre operator. You MUST summarise the CUSTOMERS text. You will be given the current summary, and the most recent transcript. Your summary MUST BE ENTITY DENSE AND THOROUGH. You MUST update the summary to include the new information from the most recent transcript. You MUST MAINTAIN THE CONTEXT FROM THE CURRENT SUMMARY. You MUST output summaries in JSON. Think things through step by step. \nThe JSON object must use the schema: ${jsonSchema}`;
 
-  const userPrompt = (summary: string, transcript_chunk: string) => `This is the current summary: ${summary}. This is the new transcript: ${transcript_chunk}. Create the new summary: `;
+  const userPrompt = (summary: string, transcript_chunk: string) => `This is the current summary YOU MUST EXTEND: ${summary}. This is the new transcript: ${transcript_chunk}. Create the updated summary: `;
 
   const summary = await completion(systemPrompt, userPrompt(currentSummary, transcriptChunk));
 
   return summary; 
 }
 
-export const emotionalState = async (summary: string, conversationBuffer: string, chunk: string): Promise<{ state: string }> => {
-    // Simulate emotional state detection logic
-    return { state: `Emotional state derived from summary: ${summary}, buffer: ${conversationBuffer}, chunk: ${chunk}` };
+export const emotionalState = async (currentEmotion: string, conversationBuffer: string, chunk: string): Promise<{ state: string }> => {
+
+  const jsonSchema = JSON.stringify(emotionalStateSchema, null, 4);
+  const systemPrompt = `You are an expert and genius tool for analyzing and summarizing the emotional state from conversation transcripts between a customer and call center operator. You MUST accurately identitfy the CUSTOMER'S emotional state from the conversation. Your identification MUST BE ENTITY DENSE AND SPECIFIC, capturing primary emotions such as anxiety, sadness, or anger. You MUST update the identification to include any new emotional details from the most recent transcript. You MUST output the emotional state identification in JSON. Think things through step by step. \nThe JSON object must use the schema: ${jsonSchema}`;
+  
+  const userPrompt = (currentEmotion: string, conversationBuffer: string, transcript_chunk: string) => `This is the current emotional state: ${currentEmotion}. This is the conversation buffer of previous conversation: ${conversationBuffer}. This is the new transcript: ${transcript_chunk}. Identify and list new emotional state detected: `;
+
 };
 
-export const riskLevel = async (summary: string, conversationBuffer: string, chunk: string): Promise<{ level: string }> => {
-    // Simulate risk level assessment logic
+export const riskLevel = async (riskLevel: string, conversationBuffer: string, chunk: string): Promise<{ level: string }> => {
+  const jsonSchema = JSON.stringify(riskLevelSchema, null, 4);
+  const systemPrompt = `You are an expert and genius tool for assessing risk levels based on conversation transcripts between a customer and call centre operator. You MUST evaluate and update the risk level based on the emotional state and detected issues from the most recent transcript. Your evaluation MUST BE THOROUGH AND JUSTIFIED. You MUST maintain consistency with the current risk assessment. You MUST output the risk level in JSON. Think things through step by step. \nThe JSON object must use the schema: ${jsonSchema}`;
+  
+  const userPrompt = (currentRiskLevel: string, transcript_chunk: string) => `This is the current risk level YOU MUST UPDATE: ${currentRiskLevel}. This is the new transcript: ${transcript_chunk}. Update the risk level based on new insights: `;
+  
     return { level: `Risk level based on summary: ${summary}, buffer: ${conversationBuffer}, chunk: ${chunk}` };
 };
 
@@ -68,7 +76,7 @@ async function testSummarize() {
 
   try {
     const output = await summarize(dummyCurrentSummary, dummyTranscriptChunk);
-    console.log("Test Output:", output);
+    console.log("Test Output:", output.content);
   } catch (error) {
     console.error("Error during test:", error);
   }

@@ -1,4 +1,6 @@
 import Groq from "groq-sdk";
+import { z } from 'zod';
+
 const groq = new Groq({ apiKey: "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" });
 
 
@@ -10,22 +12,45 @@ class Output {
   }
 }
 
-
+const OutputSchema = z.object({
+  message: z.string(),
+});
 
 
 export async function completion(systemPrompt: string, prompt: string): Promise<Output> {
-  const response = await groq.chat.completions.create({
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: prompt },
-    ],
-    model: "llama3-8b-8192",
-    temperature: 0,
-    stream: false,
-    response_format: { type: "json_object" },
-  });
-  return new Output(JSON.parse(response.choices[0].message.content));
-}
+  // async function fetchCompletion(): Promise<Output> {
+    const response = await groq.chat.completions.create({
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: prompt },
+      ],
+      // model: "llama3-8b-8192",
+      // model: "llama3-70b-8192",
+      model: "mixtral-8x7b-32768",
+      max_tokens: 16000,
+      temperature: 0.8,
+      stream: false,
+      response_format: { type: "json_object" },
+    });
+    return new Output(JSON.parse(response.choices[0].message.content));
+  }
+//     try {
+//       // Validate the response using the Zod schema
+//       const parsed = OutputSchema.parse(JSON.parse(response.choices[0].message.content));
+//       return new Output(parsed.message); // Use the validated 'message' as the content for the Output class
+//     } catch (error) {
+//       // If validation fails, log the error and retry
+//       console.error("Validation failed, retrying...", error);
+//       return fetchCompletion();
+//     }
+//   }
+
+//   return fetchCompletion();
+// }
+
+
+
+
 
 // export async function getRecipe(recipe_name) {
 //   // Pretty printing improves completion results.
