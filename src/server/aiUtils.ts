@@ -50,16 +50,16 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
 
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
-      console.log("Processing Chunk:", i + 1);
-      console.log("Current Chunk Content:\n", chunk);
-      console.log("Current Accumulated Summary Before Processing:", accumulatedSummary);
+      // console.log("Processing Chunk:", i + 1);
+      // console.log("Current Chunk Content:\n", chunk);
+      // console.log("Current Accumulated Summary Before Processing:", accumulatedSummary);
     
       const summaryResult = await summarize(accumulatedSummary, chunk);  // Pass the current accumulated summary.
       const summaryText = summaryResult?.content || "";  // Extract content from the Output object.
       accumulatedSummary = summaryText;  // Update the accumulated summary with the new summary text.
     
-      console.log("New Summary After Processing:", accumulatedSummary);
-      console.log("--------------------------------------------------\n");
+      // console.log("New Summary After Processing:", accumulatedSummary);
+      // console.log("--------------------------------------------------\n");
      // Update the accumulated summary with the new summary text.
       // const analysisResult = await emotionalState(accumulatedSummary, conversationBuffer, chunk);
       // const riskLevelResult = await riskLevel(accumulatedSummary, conversationBuffer, chunk);
@@ -87,7 +87,7 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
     return results;
   };
 
-const testResults = await processTranscript({ transcript, linesPerChunk: 5 });
+// const testResults = await processTranscript({ transcript, linesPerChunk: 5 });
 // console.log("Test Results:", testResults);
 
 //  use zod scehema and json parse to retry 
