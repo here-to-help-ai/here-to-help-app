@@ -12,21 +12,6 @@ export default function InputForm(props: InputFormProps) {
     const [audioFile, setAudioFile] = useState<File | null>(null);
     const [transcript, setTranscript] = useState<Transcript| null>(null);
 
-    useEffect(() => {
-        if (audioFile) {
-            console.log("Audio file selected:", audioFile.name);
-        }
-    }
-    , [audioFile]);
-
-    useEffect
-    (() => {
-        if (transcript) {
-            console.log("Transcript selected:", transcript);
-        }
-    }
-    , [transcript]);
-    
     const handleAudioFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         const firstFile = files?.[0];
