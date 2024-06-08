@@ -22,6 +22,7 @@ export default function ClientPage() {
     })
 
 
+
     if (!selectedInputs) {
         return (
             <main className="h-[100vh] p-10 bg-slate-50 flex justify-center items-center">
@@ -55,7 +56,11 @@ export default function ClientPage() {
         <main className="h-[100vh] bg-slate-50 p-8 w-full flex flex-col">
             {/* Emergency Control Bar */}
             <section className="flex justify-end">
-                <button className="bg-red-600 text-white px-16 py-1.5 font-bold rounded-lg">
+                <button className="bg-red-600 text-white px-16 py-1.5 font-bold rounded-lg"
+                 onClick={() => {
+                    alert("Calling 000");
+                 }}
+                >
                     Call 000
                 </button>
             </section>
@@ -74,7 +79,7 @@ export default function ClientPage() {
 
                     {/* Summary */}
                     <p>
-
+                     
                     </p>
 
                     {/* Risk Level and Emotional State */}
