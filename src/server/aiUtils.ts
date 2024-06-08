@@ -1,5 +1,5 @@
-import { summarize, emotionalState, riskLevel, detectedIssues, recommendations, actionSteps } from './aiHelpers'; // Adjust the import path as necessary
-import { type Results, type ProcessTranscriptInput } from '@/server/types'; // Adjust the import path for types
+import { summarize, emotionalState, riskLevel, detectedIssues, responseScripts, actionSteps } from './aiHelpers'; // Adjust the import path as necessary
+import { Results, ProcessTranscriptInput } from '@/server/types'; // Adjust the import path for types
 
 const transcript = `
 Operator: It's important to remember that your feelings and experiences are valid, and it's okay to seek support from those around you. Sometimes just sharing can make a big difference. Have you considered talking to a mental health professional, like a therapist or counselor?\n
@@ -19,6 +19,22 @@ Customer: Thank you for understanding. I feel a bit more confident about taking 
 Operator: You're welcome! It's normal to have these feelings, and I'm here to support you through each step. Whenever you're ready, we can start looking into options together.\n
 `;
 
+// interface ResultDetails {
+//     analysis: { state: string };
+//     riskLevel: { level: string };
+//     detectedIssues: { issues: string };
+//     recommendations: { recommendation: string };
+//     actionSteps: { steps: string };
+//   }
+
+//   type Results = Record<string, ResultDetails>;
+
+interface TranscriptInput {
+    transcript: string;
+    linesPerChunk: number;
+  }
+
+
 const BUFFER_SIZE = 2;
 export const processTranscript = async (input: ProcessTranscriptInput): Promise<Results> => {
     const { transcript, linesPerChunk } = input;
@@ -31,6 +47,12 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
     let results: Results = {};
     let conversationBuffer = "";
     let accumulatedSummary = "";  // This will hold the accumulating summary text as a string.
+    let currentEmotion = ""; // Initialize empty variable for emotional state
+    let currentRiskLevel = ""; // Initialize empty variable for risk level
+    let currentDetectedIssues = ""; // Initialize empty variable for detected issues
+    let currentRecommendations = ""; // Initialize empty variable for recommendations
+    let currentActionSteps = ""; // Initialize empty variable for action steps
+
 
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
@@ -45,33 +67,34 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
       // console.log("New Summary After Processing:", accumulatedSummary);
       // console.log("--------------------------------------------------\n");
      // Update the accumulated summary with the new summary text.
-      // const analysisResult = await emotionalState(accumulatedSummary, conversationBuffer, chunk);
-      // const riskLevelResult = await riskLevel(accumulatedSummary, conversationBuffer, chunk);
-      // const detectedIssuesResult = await detectedIssues(accumulatedSummary, conversationBuffer, chunk);
-      // const recommendationsResult = await recommendations(accumulatedSummary, conversationBuffer, chunk);
-      // const actionStepsResult = await actionSteps(accumulatedSummary, conversationBuffer, chunk);
+     const emotionResult = await emotionalState(currentEmotion, conversationBuffer, chunk);
+     currentEmotion = emotionResult.content;
+
+     const riskResult = await riskLevel(currentRiskLevel, conversationBuffer, chunk);
+     currentRiskLevel = riskResult.content;
+
+     const issuesResult = await detectedIssues(currentDetectedIssues, conversationBuffer, chunk);
+     currentDetectedIssues = issuesResult.content;
+
+     const recommendationsResult = await responseScripts(currentRecommendations, conversationBuffer, chunk);
+     currentRecommendations = recommendationsResult.content;
+
+     const actionStepsResult = await actionSteps(currentActionSteps, currentRiskLevel, currentDetectedIssues, conversationBuffer, chunk);
+     currentActionSteps = actionStepsResult.content;
   
       conversationBuffer += chunk + "\n";
       let bufferLines = conversationBuffer.split('\n');
       if (bufferLines.length > BUFFER_SIZE * linesPerChunk) {
         conversationBuffer = bufferLines.slice(bufferLines.length - BUFFER_SIZE * linesPerChunk).join('\n');
       }
-
-      // ok from the chunk there will be multiple occurrences of the following pattern
-      //  Time-stamp: 1.12 - 6.18
-      // we wannt to extract all the numbers, then get the min and max
   
-      const timeStamps = chunk.match(/Time-stamp: (\d+\.\d+) - (\d+\.\d+)/g);
-      const startTime = Number(timeStamps[0].match(/Time-stamp: (\d+\.\d+) - (\d+\.\d+)/)[1]);
-      const endTime = Number(timeStamps[timeStamps.length - 1].match(/Time-stamp: (\d+\.\d+) - (\d+\.\d+)/)[2]);
-  
-      results[`${startTime}_${endTime}`] = {
+      results[`chunk_${i + 1}`] = {
         summary: accumulatedSummary,
-        // analysis: analysisResult,
-        // riskLevel: riskLevelResult,
-        // detectedIssues: detectedIssuesResult,
-        // recommendations: recommendationsResult,
-        // actionSteps: actionStepsResult,
+        analysis: currentEmotion,
+        riskLevel: currentRiskLevel,
+        detectedIssues: currentDetectedIssues,
+        recommendations: currentRecommendations,
+        actionSteps: currentActionSteps,
       };
     }
   
@@ -79,7 +102,7 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
     return results;
   };
 
-// const testResults = await processTranscript({ transcript, linesPerChunk: 5 });
-// console.log("Test Results:", testResults);
+const testResults = await processTranscript({ transcript, linesPerChunk: 5 });
+console.log("Test Results:", testResults);
 
 //  use zod scehema and json parse to retry 

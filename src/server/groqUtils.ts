@@ -1,5 +1,9 @@
 import Groq from "groq-sdk";
-const groq = new Groq({ apiKey: "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" });
+import { z } from 'zod';
+
+const groq = new Groq({ apiKey: "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" });
+
+
 
 class Output {
   content: string;
@@ -8,24 +12,50 @@ class Output {
   }
 }
 
+const OutputSchema = z.object({
+  message: z.string(),
+});
+
+
 export async function completion(systemPrompt: string, prompt: string): Promise<Output> {
-  const response = await groq.chat.completions.create({
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: prompt },
-    ],
-    model: "llama3-8b-8192",
-    temperature: 0,
-    stream: false,
-    response_format: { type: "json_object" },
-  });
+  // async function fetchCompletion(): Promise<Output> {
+    const response = await groq.chat.completions.create({
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: prompt },
+      ],
+      // model: "llama3-8b-8192",
+      // model: "llama3-70b-8192",
+      model: "mixtral-8x7b-32768",
+      max_tokens: 16000,
+      temperature: 0.8,
+      stream: false,
+      response_format: { type: "json_object" },
+    });
+    const content = response.choices[0]?.message.content;
+    if (!content) throw new Error("No content in response");
+  
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    return new Output(JSON.parse(content));
+  }
 
-  const content = response.choices[0]?.message.content;
-  if (!content) throw new Error("No content in response");
+//     try {
+//       // Validate the response using the Zod schema
+//       const parsed = OutputSchema.parse(JSON.parse(response.choices[0].message.content));
+//       return new Output(parsed.message); // Use the validated 'message' as the content for the Output class
+//     } catch (error) {
+//       // If validation fails, log the error and retry
+//       console.error("Validation failed, retrying...", error);
+//       return fetchCompletion();
+//     }
+//   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  return new Output(JSON.parse(content));
-}
+//   return fetchCompletion();
+// }
+
+
+
+
 
 // export async function getRecipe(recipe_name) {
 //   // Pretty printing improves completion results.

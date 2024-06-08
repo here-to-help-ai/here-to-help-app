@@ -15,7 +15,50 @@ const summarySchema = {
   },
   required: ["content"]
 };
+const emotionalStateSchema = {
+  title: "Emotional State",
+  type: "object",
+  properties: {
+    content: { title: "Content", type: "string" },
+  },
+  required: ["content"]
+};
 
+const riskLevelSchema = {
+  title: "Risk Level",
+  type: "object",
+  properties: {
+    content: { title: "Content", type: "string" },
+  },
+  required: ["content"]
+};
+
+const issuesSchema = {
+  title: "Detected Issues",
+  type: "object",
+  properties: {
+    content: { title: "Content", type: "string" },
+  },
+  required: ["content"]
+};
+
+const responseScriptsSchema = {
+  title: "Response Scripts",
+  type: "object",
+  properties: {
+    content: { title: "Content", type: "string" },
+  },
+  required: ["content"]
+};
+
+const actionStepsSchema = {
+  title: "Action Steps",
+  type: "object",
+  properties: {
+    content: { title: "Content", type: "string" },
+  },
+  required: ["content"]
+};
 
 export async function summarize(currentSummary: string, transcriptChunk: string): Promise<Output> {
 
@@ -36,31 +79,57 @@ export const emotionalState = async (currentEmotion: string, conversationBuffer:
   
   const userPrompt = (currentEmotion: string, conversationBuffer: string, transcript_chunk: string) => `This is the current emotional state: ${currentEmotion}. This is the conversation buffer of previous conversation: ${conversationBuffer}. This is the new transcript: ${transcript_chunk}. Identify and list new emotional state detected: `;
 
+  const emotionalState = await completion(systemPrompt, userPrompt(currentEmotion, conversationBuffer, chunk));
+
+  return emotionalState;
 };
 
-export const riskLevel = async (riskLevel: string, conversationBuffer: string, chunk: string): Promise<{ level: string }> => {
+export const riskLevel = async (currentRiskLevel: string, conversationBuffer: string, chunk: string): Promise<{ level: string }> => {
   const jsonSchema = JSON.stringify(riskLevelSchema, null, 4);
   const systemPrompt = `You are an expert and genius tool for assessing risk levels based on conversation transcripts between a customer and call centre operator. You MUST evaluate and update the risk level based on the emotional state and detected issues from the most recent transcript. Your evaluation MUST BE THOROUGH AND JUSTIFIED. You MUST maintain consistency with the current risk assessment. You MUST output the risk level in JSON. Think things through step by step. \nThe JSON object must use the schema: ${jsonSchema}`;
   
-  const userPrompt = (currentRiskLevel: string, transcript_chunk: string) => `This is the current risk level YOU MUST UPDATE: ${currentRiskLevel}. This is the new transcript: ${transcript_chunk}. Update the risk level based on new insights: `;
+  const userPrompt = (currentRiskLevel: string, conversationBuffer: string, transcript_chunk: string) => `This is the current risk level YOU MUST UPDATE: ${currentRiskLevel}. This is the conversation buffer of previous conversation: ${conversationBuffer}. This is the new transcript: ${transcript_chunk}. Update the risk level based on new insights: `;
   
-    return { level: `Risk level based on summary: ${summary}, buffer: ${conversationBuffer}, chunk: ${chunk}` };
+  const riskLevel = await completion(systemPrompt, userPrompt(currentRiskLevel, conversationBuffer, chunk));
+
+  return riskLevel;
 };
 
-export const detectedIssues = async (summary: string, conversationBuffer: string, chunk: string): Promise<{ issues: string }> => {
-    // Simulate issue detection logic
-    return { issues: `Issues detected based on summary: ${summary}, buffer: ${conversationBuffer}, chunk: ${chunk}` };
+export const detectedIssues = async (currentIssues: string, conversationBuffer: string, chunk: string): Promise<{ issues: string }> => {
+  const jsonSchema = JSON.stringify(issuesSchema, null, 4);
+  const systemPrompt = `You are an expert and genius tool for identifying specific mental health and emotional issues from conversation transcripts between a customer and a call centre operator. You MUST identify and list new issues from the most recent transcript, updating the existing list of detected issues. Your identification MUST BE ACCURATE AND DETAILED. You MUST output the updated issues in JSON. Think things through step by step. \nThe JSON object must use the schema: ${jsonSchema}`;
+
+  const userPrompt = (currentIssues: string, conversationBuffer: string, transcript_chunk: string) => `These are the currently detected issues YOU MUST EXTEND: ${currentIssues}. This is the conversation buffer of previous conversations: ${conversationBuffer}. This is the new transcript: ${transcript_chunk}. Update the list of detected issues: `;
+
+  const issues = await completion(systemPrompt, userPrompt(currentIssues, conversationBuffer, chunk));
+
+  return issues;
 };
 
-export const recommendations = async (summary: string, conversationBuffer: string, chunk: string): Promise<{ recommendation: string }> => {
-    // Simulate recommendation logic
-    return { recommendation: `Recommendations based on summary: ${summary}, buffer: ${conversationBuffer}, chunk: ${chunk}` };
+
+export const responseScripts = async (currentScripts: string, conversationBuffer: string, chunk: string): Promise<{ scripts: string }> => {
+  const jsonSchema = JSON.stringify(responseScriptsSchema, null, 4);
+  const systemPrompt = `You are an expert and genius tool for creating response scripts for call centre operators based on the conversation transcripts with a customer. You MUST develop new response scripts based on the updated emotional state and risk assessments. Your scripts MUST BE APPROPRIATE AND TARGETED. You MUST output the scripts in JSON. Think things through step by step. \nThe JSON object must use the schema: ${jsonSchema}`;
+
+  const userPrompt = (currentScripts: string, conversationBuffer: string, transcript_chunk: string) => `These are the current response scripts YOU MUST EXTEND: ${currentScripts}. This is the conversation buffer of previous conversations: ${conversationBuffer}. This is the new transcript: ${transcript_chunk}. Generate updated response scripts: `;
+
+  const scripts = await completion(systemPrompt, userPrompt(currentScripts, conversationBuffer, chunk));
+
+  return scripts;
 };
 
-export const actionSteps = async (summary: string, conversationBuffer: string, chunk: string): Promise<{ steps: string }> => {
-    // Simulate action steps formulation logic
-    return { steps: `Action steps based on summary: ${summary}, buffer: ${conversationBuffer}, chunk: ${chunk}` };
+
+export const actionSteps = async (currentActions: string, riskLevel: string, detectedIssues: string, conversationBuffer: string, chunk: string): Promise<{ actions: string }> => {
+  const jsonSchema = JSON.stringify(actionStepsSchema, null, 4);
+  const systemPrompt = `You are an expert and genius tool for suggesting practical steps for call center operators based on the risk level and detected issues from conversation transcripts with a customer. You MUST provide specific, actionable recommendations that are justified by the updated risk level and newly detected issues. Your recommendations MUST BE TARGETED AND PRACTICAL. You MUST maintain consistency with the previous action steps. You MUST output the action steps in JSON. Think things through step by step. \nThe JSON object must use the schema: ${jsonSchema}`;
+
+  const userPrompt = (currentActions: string, riskLevel: string, detectedIssues: string, conversationBuffer: string, transcript_chunk: string) => `These are the current action steps YOU MUST EXTEND: ${currentActions}. Given the updated risk level: ${riskLevel}, and newly detected issues: ${detectedIssues}, this is the conversation buffer of previous conversations: ${conversationBuffer}. This is the new transcript: ${transcript_chunk}. Suggest updated action steps based on these insights: `;
+
+  const actions = await completion(systemPrompt, userPrompt(currentActions, riskLevel, detectedIssues, conversationBuffer, chunk));
+
+  return actions;
 };
+
 
 async function testSummarize() {
   const dummyCurrentSummary = "The conversation involves an operator encouraging a customer to consider therapy as a positive step towards mental health improvement. The customer expresses hesitation and fear about starting therapy, but shows openness after reassurance from the operator. The operator offers to provide resources and support to help the customer begin their journey towards feeling better, emphasizing a non-judgmental and supportive approach.";
