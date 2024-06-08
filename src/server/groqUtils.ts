@@ -1,5 +1,5 @@
 import Groq from "groq-sdk";
-const groq = new Groq({ apiKey: "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" });
+const groq = new Groq({ apiKey: "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" });
 
 class Output {
   content: string;
