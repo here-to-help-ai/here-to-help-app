@@ -155,39 +155,39 @@ export const actionstep = async (currentActions: string, riskLevel: string, dete
 };
 
 
-async function testSummarize() {
-  const dummyCurrentSummary = "The conversation involves an operator encouraging a customer to consider therapy as a positive step towards mental health improvement. The customer expresses hesitation and fear about starting therapy, but shows openness after reassurance from the operator. The operator offers to provide resources and support to help the customer begin their journey towards feeling better, emphasizing a non-judgmental and supportive approach.";
-  const dummyTranscriptChunk = `Customer: What kind of resources are available? I'm worried about costs and finding the right therapist.
-  Operator: There are a variety of resources, including some that are low-cost or even free. I can guide you through different options and help you find therapists who specialize in areas you're concerned about. It's all about finding the right fit for you.
-  Customer: That would be great. I'm also concerned about the time commitment.
-  Operator: Therapy can be very flexible. There are options for different session lengths and frequencies that can fit your schedule. It's important that it works for you.
-  Customer: I also have some anxiety about talking to someone new about my problems.
-  Operator: That's completely normal. It's okay to feel anxious about starting therapy. Therapists are trained to help you ease into the process comfortably at your own pace.
-  Customer: Thank you for understanding. I feel a bit more confident about taking this step now.
-  Operator: You're welcome! It's normal to have these feelings, and I'm here to support you through each step. Whenever you're ready, we can start looking into options together.
-  `;
+// async function testSummarize() {
+//   const dummyCurrentSummary = "The conversation involves an operator encouraging a customer to consider therapy as a positive step towards mental health improvement. The customer expresses hesitation and fear about starting therapy, but shows openness after reassurance from the operator. The operator offers to provide resources and support to help the customer begin their journey towards feeling better, emphasizing a non-judgmental and supportive approach.";
+//   const dummyTranscriptChunk = `Customer: What kind of resources are available? I'm worried about costs and finding the right therapist.
+//   Operator: There are a variety of resources, including some that are low-cost or even free. I can guide you through different options and help you find therapists who specialize in areas you're concerned about. It's all about finding the right fit for you.
+//   Customer: That would be great. I'm also concerned about the time commitment.
+//   Operator: Therapy can be very flexible. There are options for different session lengths and frequencies that can fit your schedule. It's important that it works for you.
+//   Customer: I also have some anxiety about talking to someone new about my problems.
+//   Operator: That's completely normal. It's okay to feel anxious about starting therapy. Therapists are trained to help you ease into the process comfortably at your own pace.
+//   Customer: Thank you for understanding. I feel a bit more confident about taking this step now.
+//   Operator: You're welcome! It's normal to have these feelings, and I'm here to support you through each step. Whenever you're ready, we can start looking into options together.
+//   `;
 
-  try {
-    const summaryOutput = await summarize(dummyCurrentSummary, dummyTranscriptChunk);
-    console.log("Test Summary Output:", summaryOutput.content);
+//   try {
+//     const summaryOutput = await summarize(dummyCurrentSummary, dummyTranscriptChunk);
+//     console.log("Test Summary Output:", summaryOutput.content);
 
-    const emotionalStateOutput = await emotionalState("", "", dummyTranscriptChunk);
-    console.log("Test Emotional State Output:", emotionalStateOutput.content);
+//     const emotionalStateOutput = await emotionalState("", "", dummyTranscriptChunk);
+//     console.log("Test Emotional State Output:", emotionalStateOutput.content);
 
-    const riskLevelOutput = await riskLevel("", "", dummyTranscriptChunk);
-    console.log("Test Risk Level Output:", riskLevelOutput.content);
+//     const riskLevelOutput = await riskLevel("", "", dummyTranscriptChunk);
+//     console.log("Test Risk Level Output:", riskLevelOutput.content);
 
-    const detectedIssuesOutput = await detectedIssues("", "", dummyTranscriptChunk);
-    console.log("Test Detected Issues Output:", detectedIssuesOutput.content);
+//     const detectedIssuesOutput = await detectedIssues("", "", dummyTranscriptChunk);
+//     console.log("Test Detected Issues Output:", detectedIssuesOutput.content);
 
-    const responseScriptsOutput = await responseScripts("", "", dummyTranscriptChunk);
-    console.log("Test Response Scripts Output:", responseScriptsOutput.content);
+//     const responseScriptsOutput = await responseScripts("", "", dummyTranscriptChunk);
+//     console.log("Test Response Scripts Output:", responseScriptsOutput.content);
 
-    const actionstepOutput = await actionstep("", "", "", "", dummyTranscriptChunk);
-    console.log("Test Action step Output:", actionstepOutput.content);
-  } catch (error) {
-    console.error("Error during test:", error);
-  }
-}
-testSummarize();
+//     const actionstepOutput = await actionstep("", "", "", "", dummyTranscriptChunk);
+//     console.log("Test Action step Output:", actionstepOutput.content);
+//   } catch (error) {
+//     console.error("Error during test:", error);
+//   }
+// }
+// testSummarize();
 

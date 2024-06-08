@@ -23,17 +23,22 @@ export default function ClientPage() {
         } | null>(null);
 
 
+        
     const { data, isLoading, error } = api.ai.processTranscript.useQuery({
-        linesPerChunk: 5,
+        linesPerChunk: 10, //modify this to have more or less overall chunks
         transcript: transcript.transcription_speaker_timestamp
     }, {
         enabled: !!selectedInputs,
-        queryKeyHashFn: (input) => JSON.stringify(input)
+        queryKeyHashFn: (input) => JSON.stringify(input),
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        retry: false,
     })
     const [currentDuration, setCurrentDuration] = useState<number>(0);
 
     const processedData = useMemo<ProcessedDataArray>(() => {
-        const res: ProcessedDataArray = [];
+        let res: ProcessedDataArray = [];
 
         if (!data) {
             return res;
@@ -46,16 +51,16 @@ export default function ClientPage() {
             res.push({
                 startTime,
                 endTime,
-                analysis: value.analysis,
-                riskLevel: value.riskLevel,
-                detectedIssues: value.detectedIssues,
-                recommendations: value.recommendations,
-                actionSteps: value.actionSteps
+                analysis: value.analysis.properties.content.content,
+                riskLevel: value.riskLevel.properties.content.content,
+                detectedIssues: value.detectedIssues.properties.content.content,
+                recommendations: value.recommendations.properties.content.content,
+                actionSteps: value.actionSteps.properties.content.content,
             });
         }
 
         // filter so that endtime is less than the current duration
-        res.filter((d) => d.endTime <= currentDuration);
+       res =  res.filter((d) => d.endTime <= currentDuration);
         
         return res;
     }, [data])
@@ -134,34 +139,61 @@ export default function ClientPage() {
                 {/* Profile */}
                 <section className="bg-white border p-4 border-grey-200 rounded-xl">
                     <h2 className="text-lg font-semibold">Your call with Sahil</h2>
-
+                    <div className="p-2"/>
                     {/* Summary */}
-                    <p>
-                        {activeData?.analysis}
-                    </p>
 
+                    {
+                        activeData?.analysis ? <p>
+                            {activeData?.analysis}
+                        </p> : <NoDataMessage />
+                    }
+                   
+
+
+                    <div className="p-4"/>
                     {/* Risk Level and Emotional State */}
-                    <div>
-                        {activeData?.riskLevel}
-                    </div>
+                    <h2 className="font-semibold">Risk Level</h2>
+                    <div className="p-2"/>
+                
+                    {activeData.riskLevel ? <p>
+                        {activeData.riskLevel}
+                    </p> : <NoDataMessage />
+                    }
 
+               
+
+                    <h2 className="font-semibold">Detected Issues</h2>
+                    <div className="p-2"/>
                     {/* Detected Issues */}
-                    <div>
+                    {activeData?.detectedIssues ? <p>
                         {activeData?.detectedIssues}
-                    </div>
+                    </p> : <NoDataMessage />}
                 </section>
 
                 {/* Suggestions */}
                 <div className="flex flex-col gap-2">
                     <section className="bg-white border p-4 border-grey-200 rounded-xl grow">
                         <h2 className="text-lg font-semibold">Suggested Response</h2>
-
-                        {activeData?.recommendations}
+                        {
+                            activeData?.recommendations ? (
+                                <p>
+                                    {activeData?.recommendations}
+                                </p>
+                            ) : (
+                                <NoDataMessage />
+                            )
+                        }
                     </section>
                     <section className="bg-white border p-4 border-grey-200 rounded-xl grow">
                         <h2 className="text-lg font-semibold">Insights and Recommendations</h2>
                         {
-                            activeData?.actionSteps
+                            activeData?.actionSteps ? (
+                                <p>
+                                    {activeData?.actionSteps}
+                                </p>
+                            ) : (
+                                <NoDataMessage />
+                            )
                         }
                     </section>
                 </div>
@@ -177,5 +209,13 @@ export default function ClientPage() {
                 setCurrentDuration={setCurrentDuration}
             />
         </main>
+    );
+}
+
+function NoDataMessage() {
+    return (
+        <p className="text-xs text-gray-400">
+            Waiting on data...
+        </p>
     );
 }

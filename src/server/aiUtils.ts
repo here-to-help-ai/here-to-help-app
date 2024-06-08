@@ -1,4 +1,4 @@
-import { summarize, emotionalState, riskLevel, detectedIssues, responseScripts, actionSteps } from './aiHelpers'; // Adjust the import path as necessary
+import { summarize, emotionalState, riskLevel, detectedIssues, responseScripts, actionstep } from './aiHelpers'; // Adjust the import path as necessary
 import { Results, ProcessTranscriptInput } from '@/server/types'; // Adjust the import path for types
 
 const transcript = `
@@ -56,7 +56,7 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
 
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
-      // console.log("Processing Chunk:", i + 1);
+      console.log("Processing Chunk:", i + 1, "of", chunks.length);
       // console.log("Current Chunk Content:\n", chunk);
       // console.log("Current Accumulated Summary Before Processing:", accumulatedSummary);
     
@@ -79,7 +79,7 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
      const recommendationsResult = await responseScripts(currentRecommendations, conversationBuffer, chunk);
      currentRecommendations = recommendationsResult.content;
 
-     const actionStepsResult = await actionSteps(currentActionSteps, currentRiskLevel, currentDetectedIssues, conversationBuffer, chunk);
+     const actionStepsResult = await actionstep(currentActionSteps, currentRiskLevel, currentDetectedIssues, conversationBuffer, chunk);
      currentActionSteps = actionStepsResult.content;
   
       conversationBuffer += chunk + "\n";
@@ -87,8 +87,12 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
       if (bufferLines.length > BUFFER_SIZE * linesPerChunk) {
         conversationBuffer = bufferLines.slice(bufferLines.length - BUFFER_SIZE * linesPerChunk).join('\n');
       }
+
+      const timeStamps = chunk.match(/Time-stamp: (\d+\.\d+) - (\d+\.\d+)/g);
+      const startTime = Number(timeStamps[0].match(/Time-stamp: (\d+\.\d+) - (\d+\.\d+)/)[1]);
+      const endTime = Number(timeStamps[timeStamps.length - 1].match(/Time-stamp: (\d+\.\d+) - (\d+\.\d+)/)[2]);
   
-      results[`chunk_${i + 1}`] = {
+      results[`${startTime}_${endTime}`] = {
         summary: accumulatedSummary,
         analysis: currentEmotion,
         riskLevel: currentRiskLevel,
@@ -102,7 +106,7 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
     return results;
   };
 
-const testResults = await processTranscript({ transcript, linesPerChunk: 5 });
-console.log("Test Results:", testResults);
+// const testResults = await processTranscript({ transcript, linesPerChunk: 5 });
+// console.log("Test Results:", testResults);
 
 //  use zod scehema and json parse to retry 
