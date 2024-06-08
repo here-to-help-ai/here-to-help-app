@@ -42,7 +42,7 @@ export default function ClientPage() {
                 Here-to-Help.ai
             </h1>
 
-            <div className="p-4" />
+            <div className="p-2" />
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1.3fr] gap-4 grow">
                 {/* Profile */}
                 <section className="bg-white border p-4 border-grey-200 rounded-xl">
