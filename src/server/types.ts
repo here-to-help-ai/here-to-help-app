@@ -4,6 +4,7 @@ export type Results = Record<string, {
       detectedIssues: { issues: string };
       recommendations: { recommendation: string };
       actionSteps: { steps: string };
+
     }>;
   
 export interface ProcessTranscriptInput {
