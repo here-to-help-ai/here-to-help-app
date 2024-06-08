@@ -46,7 +46,7 @@ export default function ClientPage() {
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1.3fr] gap-4 grow">
                 {/* Profile */}
                 <section className="bg-white border p-4 border-grey-200 rounded-xl">
-                    <h2 className="text-lg font-semibold">Your call with Jeff Tan</h2>
+                    <h2 className="text-lg font-semibold">Your call with Sahil</h2>
 
                     {/* Summary */}
                     <p>
