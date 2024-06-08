@@ -30,7 +30,8 @@ export default function ProgressBar(props: ProgressBarProps) {
                                 width: chunkWidth,
                                 left: chunkWidth * index
                             }}>
-                                CHUNK
+                                <div className="h-2.5 w-2.5 bg-red-500 rounded-full">
+                                </div>
                             </div>
                         ))
                     }
