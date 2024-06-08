@@ -2,8 +2,8 @@
 
 import { api } from "@/trpc/react";
 import { useState } from "react";
-import { Transcript } from "@/utils/types";
 import InputForm from "./input-form";
+import ProgressBar from "./progressbar";
 
 export default function ClientPage() {
     const [selectedInputs, setSelectedInputs] = useState<
@@ -86,9 +86,7 @@ export default function ClientPage() {
             <div className="p-4" />
 
             {/* Progress Bar */}
-            <section className="bg-white border p-4 border-grey-200 rounded-xl">
-
-            </section>
+            <ProgressBar chunks={[]} currentDuration={"00:10"}/>
         </main>
     );
 }
