@@ -46,11 +46,11 @@ export default function ClientPage() {
             res.push({
                 startTime,
                 endTime,
-                analysis: value.analysis.state,
-                riskLevel: value.riskLevel.level,
-                detectedIssues: value.detectedIssues.issues,
-                recommendations: value.recommendations.recommendation,
-                actionSteps: value.actionSteps.steps
+                analysis: value.analysis,
+                riskLevel: value.riskLevel,
+                detectedIssues: value.detectedIssues,
+                recommendations: value.recommendations,
+                actionSteps: value.actionSteps
             });
         }
 
@@ -128,7 +128,7 @@ export default function ClientPage() {
             </h1>
 
             <div className="p-2" />
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1.3fr] gap-4 grow"
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 grow"
 
             >
                 {/* Profile */}
@@ -151,10 +151,6 @@ export default function ClientPage() {
                     </div>
                 </section>
 
-                {/* Transcription */}
-                <section className="bg-white border p-4 border-grey-200 rounded-xl">
-                    <h2 className="text-lg font-semibold">Chat Transcription</h2>
-                </section>
                 {/* Suggestions */}
                 <div className="flex flex-col gap-2">
                     <section className="bg-white border p-4 border-grey-200 rounded-xl grow">

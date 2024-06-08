@@ -25,15 +25,28 @@ export default function ProgressBar(props: ProgressBarProps) {
                     ref={ref}>
 
                     {
-                        data.map((chunk, index) => (
-                            <div key={index} className="absolute" style={{
+                        data.map((chunk, index) => {
+                            // eslint-disable-next-line react-hooks/rules-of-hooks
+                            const [hovered, setHovered] = useState(false);
+                           return (<div key={index} className="absolute " style={{
                                 width: chunkWidth,
                                 left: chunkWidth * index
                             }}>
-                                <div className="h-2.5 w-2.5 bg-red-500 rounded-full">
+                                <div className="h-2.5 w-2.5 bg-red-500 rounded-full relative" 
+                                    onMouseEnter={() => setHovered(true)}
+                                    onMouseLeave={() => setHovered(false)}
+                                >
+                                    {
+                                        hovered && (
+                                            <div className="absolute top-0 left-0 bg-white p-2 rounded-lg shadow-lg">
+                                                {/* {chunk} */}
+                                            </div>
+                                        )
+                                    }
+                                  
                                 </div>
-                            </div>
-                        ))
+                            </div>)
+})
                     }
 
                     <div className="h-5 w-5 bg-white  rounded-full border border-gray-300 absolute -right-2 -top-1">
