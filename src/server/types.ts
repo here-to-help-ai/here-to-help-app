@@ -1,11 +1,11 @@
 export interface Results {
     [key: string]: {
       summary: string;
-      // analysis: { state: string };
-      // riskLevel: { level: string };
-      // detectedIssues: { issues: string };
-      // recommendations: { recommendation: string };
-      // actionSteps: { steps: string };
+      analysis: string;
+      riskLevel: string;
+      detectedIssues: string;
+      recommendations: string;
+      actionSteps: string;
     };
   }
   

@@ -1,4 +1,4 @@
-import { summarize, emotionalState, riskLevel, detectedIssues, recommendations, actionSteps } from './aiHelpers'; // Adjust the import path as necessary
+import { summarize, emotionalState, riskLevel, detectedIssues, responseScripts, actionSteps } from './aiHelpers'; // Adjust the import path as necessary
 import { Results, ProcessTranscriptInput } from '@/server/types'; // Adjust the import path for types
 
 const transcript = `
@@ -47,6 +47,12 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
     let results: Results = {};
     let conversationBuffer = "";
     let accumulatedSummary = "";  // This will hold the accumulating summary text as a string.
+    let currentEmotion = ""; // Initialize empty variable for emotional state
+    let currentRiskLevel = ""; // Initialize empty variable for risk level
+    let currentDetectedIssues = ""; // Initialize empty variable for detected issues
+    let currentRecommendations = ""; // Initialize empty variable for recommendations
+    let currentActionSteps = ""; // Initialize empty variable for action steps
+
 
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
@@ -61,11 +67,20 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
       // console.log("New Summary After Processing:", accumulatedSummary);
       // console.log("--------------------------------------------------\n");
      // Update the accumulated summary with the new summary text.
-      // const analysisResult = await emotionalState(accumulatedSummary, conversationBuffer, chunk);
-      // const riskLevelResult = await riskLevel(accumulatedSummary, conversationBuffer, chunk);
-      // const detectedIssuesResult = await detectedIssues(accumulatedSummary, conversationBuffer, chunk);
-      // const recommendationsResult = await recommendations(accumulatedSummary, conversationBuffer, chunk);
-      // const actionStepsResult = await actionSteps(accumulatedSummary, conversationBuffer, chunk);
+     const emotionResult = await emotionalState(currentEmotion, conversationBuffer, chunk);
+     currentEmotion = emotionResult.content;
+
+     const riskResult = await riskLevel(currentRiskLevel, conversationBuffer, chunk);
+     currentRiskLevel = riskResult.content;
+
+     const issuesResult = await detectedIssues(currentDetectedIssues, conversationBuffer, chunk);
+     currentDetectedIssues = issuesResult.content;
+
+     const recommendationsResult = await responseScripts(currentRecommendations, conversationBuffer, chunk);
+     currentRecommendations = recommendationsResult.content;
+
+     const actionStepsResult = await actionSteps(currentActionSteps, currentRiskLevel, currentDetectedIssues, conversationBuffer, chunk);
+     currentActionSteps = actionStepsResult.content;
   
       conversationBuffer += chunk + "\n";
       let bufferLines = conversationBuffer.split('\n');
@@ -75,11 +90,11 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
   
       results[`chunk_${i + 1}`] = {
         summary: accumulatedSummary,
-        // analysis: analysisResult,
-        // riskLevel: riskLevelResult,
-        // detectedIssues: detectedIssuesResult,
-        // recommendations: recommendationsResult,
-        // actionSteps: actionStepsResult,
+        analysis: currentEmotion,
+        riskLevel: currentRiskLevel,
+        detectedIssues: currentDetectedIssues,
+        recommendations: currentRecommendations,
+        actionSteps: currentActionSteps,
       };
     }
   
@@ -87,7 +102,7 @@ export const processTranscript = async (input: ProcessTranscriptInput): Promise<
     return results;
   };
 
-// const testResults = await processTranscript({ transcript, linesPerChunk: 5 });
-// console.log("Test Results:", testResults);
+const testResults = await processTranscript({ transcript, linesPerChunk: 5 });
+console.log("Test Results:", testResults);
 
 //  use zod scehema and json parse to retry 
