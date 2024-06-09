@@ -1,12 +1,13 @@
 import Groq from "groq-sdk";
 import { z } from 'zod';
 import OpenAI from "openai";
+import { env } from "@/env";
 const openai = new OpenAI({
-  apiKey: "sk-proj-L0GoDXdVMbcDBqaXkG8kT3BlbkFJDMLnZJm5KJWxn3HjdV1x",
+  apiKey: env.OPENAI_API_KEY
 });
 
 
-const groq = new Groq({ apiKey: "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" });
+// const groq = new Groq({ apiKey: "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" });
 
 
 
